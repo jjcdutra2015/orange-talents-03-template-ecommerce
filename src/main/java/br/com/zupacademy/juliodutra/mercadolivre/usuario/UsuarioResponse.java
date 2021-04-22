@@ -4,19 +4,25 @@ import java.time.LocalDateTime;
 
 public class UsuarioResponse {
 
+    private Long id;
     private LocalDateTime instanteCadastro;
-    private String login;
+    private String email;
 
     public UsuarioResponse(Usuario usuario) {
+        this.id = usuario.getId();
         this.instanteCadastro = usuario.getInstanteCadastro();
-        this.login = usuario.getLogin();
+        this.email = usuario.getEmail();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public LocalDateTime getInstanteCadastro() {
         return instanteCadastro;
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 }

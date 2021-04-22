@@ -1,4 +1,4 @@
-package br.com.zupacademy.juliodutra.mercadolivre.validacao;
+package br.com.zupacademy.juliodutra.mercadolivre.config.validacao;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;

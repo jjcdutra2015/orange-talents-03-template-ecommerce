@@ -1,21 +1,23 @@
 package br.com.zupacademy.juliodutra.mercadolivre.usuario;
 
+import br.com.zupacademy.juliodutra.mercadolivre.config.compartilhado.UniqueEmail;
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class NovoUsuarioRequest {
 
-    @NotBlank @Email
-    private String login;
-    @NotBlank @Size(min = 6, message = "Senha deve ter no mínimo 6 caracteres")
+    @NotBlank
+    @Email
+    @UniqueEmail(domainClass = Usuario.class, fieldName = "email")
+    private String email;
+    @NotBlank
+    @Length(min = 6)
     private String senha;
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
     public String getSenha() {
@@ -23,26 +25,6 @@ public class NovoUsuarioRequest {
     }
 
     public Usuario toModel() {
-        return new Usuario(login, hashSenha(senha));
-    }
-
-    private String hashSenha(String senha) {
-        String hexSenha = "";
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte messaDigests[] = md.digest(senha.getBytes("UTF-8"));
-
-            StringBuilder sb = new StringBuilder();
-            for (byte b : messaDigests) {
-                sb.append(String.format("%02x", 0xFF & b));
-            }
-
-            hexSenha = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return hexSenha;
+        return new Usuario(email, new SenhaLimpa(senha));
     }
 }

@@ -1,4 +1,4 @@
-package br.com.zupacademy.juliodutra.mercadolivre.validacao;
+package br.com.zupacademy.juliodutra.mercadolivre.config.validacao;
 
 public class ErroFormularioDTO {
     private String campo;

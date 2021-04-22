@@ -1,5 +1,9 @@
 package br.com.zupacademy.juliodutra.mercadolivre.usuario;
 
+import org.hibernate.validator.constraints.Length;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,25 +11,32 @@ import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class Usuario {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @PastOrPresent
     private LocalDateTime instanteCadastro = LocalDateTime.now();
-    @NotBlank @Email
-    private String login;
-    @NotBlank @Size(min = 6)
+    @NotBlank
+    @Email
+    private String email;
+    @NotBlank
+    @Length(min = 6)
     private String senha;
 
-    public Usuario(String login, String senha) {
-        this.login = login;
-        this.senha = senha;
+    @Deprecated
+    public Usuario() {
+    }
+
+    public Usuario(@Email @NotBlank String email, SenhaLimpa senhaLimpa) {
+        Assert.isTrue(StringUtils.hasLength(email), "Email não pode estar vazio");
+        Assert.notNull(senhaLimpa, "Objeto senha limpa não pode ser nulo");
+        this.email = email;
+        this.senha = senhaLimpa.hash();
     }
 
     public Long getId() {
@@ -36,8 +47,8 @@ public class Usuario {
         return instanteCadastro;
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
     public String getSenha() {
