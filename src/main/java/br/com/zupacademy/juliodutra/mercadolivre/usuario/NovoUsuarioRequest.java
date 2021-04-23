@@ -1,6 +1,6 @@
 package br.com.zupacademy.juliodutra.mercadolivre.usuario;
 
-import br.com.zupacademy.juliodutra.mercadolivre.config.compartilhado.UniqueEmail;
+import br.com.zupacademy.juliodutra.mercadolivre.config.compartilhado.UniqueValue;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -10,7 +10,7 @@ public class NovoUsuarioRequest {
 
     @NotBlank
     @Email
-    @UniqueEmail(domainClass = Usuario.class, fieldName = "email")
+    @UniqueValue(domainClass = Usuario.class, fieldName = "email")
     private String email;
     @NotBlank
     @Length(min = 6)
