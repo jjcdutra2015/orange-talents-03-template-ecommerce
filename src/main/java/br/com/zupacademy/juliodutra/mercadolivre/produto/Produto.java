@@ -41,6 +41,8 @@ public class Produto {
     @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
     private Set<CaracteristicaProduto> caracteristicas = new HashSet<>();
     private LocalDateTime instanteCadastro = LocalDateTime.now();
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+    private Set<ImagemProduto> imagens = new HashSet<>();
 
     @Deprecated
     public Produto() {
@@ -91,6 +93,10 @@ public class Produto {
         return instanteCadastro;
     }
 
+    public Set<ImagemProduto> getImagens() {
+        return imagens;
+    }
+
     @Override
     public String toString() {
         return "Produto{" +
@@ -116,5 +122,10 @@ public class Produto {
     @Override
     public int hashCode() {
         return Objects.hash(nome);
+    }
+
+    public void associaImagens(Set<String> links) {
+        Set<ImagemProduto> imagens = links.stream().map(link -> new ImagemProduto(this, link)).collect(Collectors.toSet());
+        this.imagens.addAll(imagens);
     }
 }
