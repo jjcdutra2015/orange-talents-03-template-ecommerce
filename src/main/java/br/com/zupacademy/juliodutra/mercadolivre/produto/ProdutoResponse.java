@@ -3,10 +3,12 @@ package br.com.zupacademy.juliodutra.mercadolivre.produto;
 import br.com.zupacademy.juliodutra.mercadolivre.caracteristica.CaracteristicaProduto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 public class ProdutoResponse {
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
     private Long id;
     private String nome;
@@ -14,8 +16,9 @@ public class ProdutoResponse {
     private int quantidade;
     private String descricao;
     private Long categoriaId;
+    private String emailDono;
     private Set<CaracteristicaProduto> caracteristicas;
-    private LocalDateTime instanteCadastro;
+    private String instanteCadastro;
 
     public ProdutoResponse(Produto produto) {
         this.id = produto.getId();
@@ -24,8 +27,10 @@ public class ProdutoResponse {
         this.quantidade = produto.getQuantidade();
         this.descricao = produto.getDescricao();
         this.categoriaId = produto.getCategoria().getId();
+        this.emailDono = produto.getDono().getEmail();
         this.caracteristicas = produto.getCaracteristicas();
-        this.instanteCadastro = produto.getInstanteCadastro();
+        String dataFormatada = produto.getInstanteCadastro().format(formatter);
+        this.instanteCadastro = dataFormatada;
     }
 
     public Long getId() {
@@ -52,11 +57,15 @@ public class ProdutoResponse {
         return categoriaId;
     }
 
+    public String getEmailDono() {
+        return emailDono;
+    }
+
     public Set<CaracteristicaProduto> getCaracteristicas() {
         return caracteristicas;
     }
 
-    public LocalDateTime getInstanteCadastro() {
+    public String getInstanteCadastro() {
         return instanteCadastro;
     }
 }

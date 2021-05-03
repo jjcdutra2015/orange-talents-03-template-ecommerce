@@ -1,16 +1,19 @@
 package br.com.zupacademy.juliodutra.mercadolivre.usuario;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class UsuarioResponse {
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
     private Long id;
-    private LocalDateTime instanteCadastro;
+    private String instanteCadastro;
     private String email;
 
     public UsuarioResponse(Usuario usuario) {
         this.id = usuario.getId();
-        this.instanteCadastro = usuario.getInstanteCadastro();
+        String dataFormatada = usuario.getInstanteCadastro().format(formatter);
+        this.instanteCadastro = dataFormatada;
         this.email = usuario.getEmail();
     }
 
@@ -18,7 +21,7 @@ public class UsuarioResponse {
         return id;
     }
 
-    public LocalDateTime getInstanteCadastro() {
+    public String getInstanteCadastro() {
         return instanteCadastro;
     }
 

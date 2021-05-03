@@ -1,7 +1,10 @@
 package br.com.zupacademy.juliodutra.mercadolivre.produto;
 
 import br.com.zupacademy.juliodutra.mercadolivre.categoria.CategoriaRepository;
+import br.com.zupacademy.juliodutra.mercadolivre.usuario.Usuario;
+import br.com.zupacademy.juliodutra.mercadolivre.usuario.UsuarioRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,15 +16,17 @@ import java.util.Set;
 @RequestMapping("produtos")
 public class ProdutoController {
 
-    private CategoriaRepository categoriaRepository;
-    private ProdutoRepository produtoRepository;
+    private final CategoriaRepository categoriaRepository;
+    private final ProdutoRepository produtoRepository;
+    private final UsuarioRepository usuarioRepository;
     //1
     private Uploader uploaderFake;
 
     public ProdutoController(CategoriaRepository categoriaRepository, ProdutoRepository produtoRepository,
-                             UploaderFake uploaderFake) {
+                             UsuarioRepository usuarioRepository, UploaderFake uploaderFake) {
         this.categoriaRepository = categoriaRepository;
         this.produtoRepository = produtoRepository;
+        this.usuarioRepository = usuarioRepository;
         this.uploaderFake = uploaderFake;
     }
 
@@ -34,9 +39,10 @@ public class ProdutoController {
     @PostMapping
     @Transactional
     //1
-    public ResponseEntity<ProdutoResponse> cadastrar(@Valid @RequestBody NovoProdutoRequest request) {
+    public ResponseEntity<ProdutoResponse> cadastrar(@Valid @RequestBody NovoProdutoRequest request, @AuthenticationPrincipal Usuario logado) {
+        Usuario usuarioLogado = usuarioRepository.findByEmail(logado.getEmail()).get();
         //1
-        Produto produto = request.toModel(categoriaRepository);
+        Produto produto = request.toModel(categoriaRepository, usuarioLogado);
         produtoRepository.save(produto);
         //1
         return ResponseEntity.ok(new ProdutoResponse(produto));

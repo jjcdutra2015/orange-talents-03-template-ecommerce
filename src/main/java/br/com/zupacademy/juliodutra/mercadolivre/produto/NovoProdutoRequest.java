@@ -5,6 +5,7 @@ import br.com.zupacademy.juliodutra.mercadolivre.categoria.Categoria;
 import br.com.zupacademy.juliodutra.mercadolivre.categoria.CategoriaRepository;
 import br.com.zupacademy.juliodutra.mercadolivre.config.compartilhado.ExistsId;
 import br.com.zupacademy.juliodutra.mercadolivre.config.compartilhado.UniqueValue;
+import br.com.zupacademy.juliodutra.mercadolivre.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.Valid;
@@ -48,9 +49,9 @@ public class NovoProdutoRequest {
         this.caracteristicas.addAll(caracteristicas);
     }
 
-    public Produto toModel(CategoriaRepository categoriaRepository) {
+    public Produto toModel(CategoriaRepository categoriaRepository, Usuario dono) {
         Categoria categoria = categoriaRepository.findById(categoriaId).get();
-        return new Produto(this.nome, this.valor, this.quantidade, this.descricao, categoria, caracteristicas);
+        return new Produto(this.nome, this.valor, this.quantidade, this.descricao, categoria, dono, caracteristicas);
     }
 
     public List<NovaCaracteristicaRequest> getCaracteristicas() {

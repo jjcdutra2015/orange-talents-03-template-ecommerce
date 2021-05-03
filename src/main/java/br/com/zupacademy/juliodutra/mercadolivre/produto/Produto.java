@@ -3,6 +3,7 @@ package br.com.zupacademy.juliodutra.mercadolivre.produto;
 import br.com.zupacademy.juliodutra.mercadolivre.caracteristica.CaracteristicaProduto;
 import br.com.zupacademy.juliodutra.mercadolivre.caracteristica.NovaCaracteristicaRequest;
 import br.com.zupacademy.juliodutra.mercadolivre.categoria.Categoria;
+import br.com.zupacademy.juliodutra.mercadolivre.usuario.Usuario;
 import io.jsonwebtoken.lang.Assert;
 import org.hibernate.validator.constraints.Length;
 
@@ -38,6 +39,8 @@ public class Produto {
     @NotNull
     @ManyToOne
     private Categoria categoria;
+    @ManyToOne
+    private Usuario dono;
     @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
     private Set<CaracteristicaProduto> caracteristicas = new HashSet<>();
     private LocalDateTime instanteCadastro = LocalDateTime.now();
@@ -48,12 +51,14 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(String nome, BigDecimal valor, int quantidade, String descricao, Categoria categoria, Collection<NovaCaracteristicaRequest> caracteristicas) {
+    public Produto(String nome, BigDecimal valor, int quantidade, String descricao, Categoria categoria,
+                   Usuario dono, Collection<NovaCaracteristicaRequest> caracteristicas) {
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
         this.descricao = descricao;
         this.categoria = categoria;
+        this.dono = dono;
         Set<CaracteristicaProduto> novasCaracteristicas = caracteristicas
                 .stream().map(caracteristica -> caracteristica.toModel(this)).collect(Collectors.toSet());
         this.caracteristicas.addAll(novasCaracteristicas);
@@ -83,6 +88,10 @@ public class Produto {
 
     public Categoria getCategoria() {
         return categoria;
+    }
+
+    public Usuario getDono() {
+        return dono;
     }
 
     public Set<CaracteristicaProduto> getCaracteristicas() {
